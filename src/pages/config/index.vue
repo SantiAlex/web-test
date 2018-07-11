@@ -3,17 +3,18 @@
         <scroller>
             <div class='block'>
                 <text class="title">basic</text>
-                <textarea class="textarea" v-model='basic'></textarea>
+                <textarea class="textarea" @input="basicchange"  @change="basicchange" @focus="basicchange" v-model='basic'></textarea>
             </div>
             <div class='block'>
                 <text class="title">param</text>
-                <textarea class="textarea" v-model='param'></textarea>
+                <textarea class="textarea" @input="paramchangechange"  @change="paramchange" @focus="paramchange" v-model='param'></textarea>
             </div>
             <div class='block'>
                 <text class="title">keys</text>
-                <textarea class="textarea" @input="oninput" @change="onchange" @focus="onfocus" @blur="onblur" v-model='key'></textarea>
+                <textarea class="textarea" @input="keyschange" @change="keyschange" @focus="keyschange" @blur="onblur" v-model='keys'></textarea>
             </div>
-            <text @click='test'>{{t}}</text>
+
+
         </scroller>
     </div>
 </template>
@@ -24,10 +25,10 @@ export default {
     name: 'home',
     data: function() {
         return {
-            basic: 'http://cdn4.videos.motherlessmedia.com/videos/',
-            key: '3B349BC',
-            param: '.mp4?fs=opencloud',
-            t:'123dddddddddddddddd',
+            basic: '',
+            keys: '',
+            param: '',
+
         }
     },
     mounted: function() {
@@ -55,22 +56,12 @@ export default {
             dingtalk.ready(function() {
                 const dd = dingtalk.apis;
                 dd.util.domainStorage.setItem({
-                    name: "key",
-                    value: me.key
-                })
-            })
-        },
-        paramchange() {
-            const me = this
-            dingtalk.ready(function() {
-                const dd = dingtalk.apis;
-                dd.util.domainStorage.setItem({
                     name: "basic",
                     value: me.basic
                 })
             })
         },
-        keychange() {
+        paramchange() {
             const me = this
             dingtalk.ready(function() {
                 const dd = dingtalk.apis;
@@ -80,16 +71,23 @@ export default {
                 })
             })
         },
+        keyschange() {
+            const me = this
+            dingtalk.ready(function() {
+                const dd = dingtalk.apis;
+                dd.util.domainStorage.setItem({
+                    name: "keys",
+                    value: me.keys
+                })
+            })
+        },
         test() {
             const me = this
             dingtalk.ready(function() {
                 const dd = dingtalk.apis;
                 dd.util.domainStorage.getItem({
-                    name: 'keys', // 存储信息的key值
+                    name: 'keys',
                     onSuccess: function(info) {
-                        /*{
-                             value: 'value' // 获取存储的信息
-                         }*/
                         me.t = info.value
                     },
                     onFail: function(err) {
@@ -98,6 +96,12 @@ export default {
                 });
             })
 
+        },
+        clear() {
+            dingtalk.ready(function() {
+                const dd = dingtalk.apis;
+                dd.util.domainStorage.clearItems({})
+            })
         }
     }
 }

@@ -1,20 +1,26 @@
 <template>
     <div class="wrapper">
-        <text class="title" v-on:click="getClick"> {{ key}}</text>
+        <text class="title" v-on:click="getClick"> {{key}}</text>
         <web :src="basic+key+param" class='page'></web>
+        <text>{{basic}}</text>
+        <text>{{key}}</text>
+        <text>{{param}}</text>
+        <text class="button" @click="pickTime">Pick One</text>
     </div>
 </template>
 <script>
 import dingtalk from 'dingtalk-javascript-sdk';
-var modal = weex.requireModule('modal');
+const modal = weex.requireModule('modal');
+const picker = weex.requireModule('picker')
 
 export default {
     name: 'home',
     data: function() {
         return {
-            basic: 'http://cdn4.videos.motherlessmedia.com/videos/',
-            key: '3B349BC',
-            param: '.mp4?fs=opencloud',
+            basic: '',
+            key: '',
+            param: '',
+            keys:{}
         }
     },
     mounted: function() {
@@ -38,45 +44,53 @@ export default {
 
 
             dd.util.domainStorage.getItem({
-                name: 'key', // 存储信息的key值
+                name: 'keys', // 存储信息的key值
+                onSuccess: function(info) {
+                    
+                    me.keys = JSON.parse(info.value)
+                    
+                },
+                onFail: function(err) {
+                    alert(JSON.stringify(err));
+                }
+            });
+            dd.util.domainStorage.getItem({
+                name: 'basic', // 存储信息的key值
                 onSuccess: function(info) {
 
-                    me.key = info.value.key
+                    me.basic = info.value
 
                 },
                 onFail: function(err) {
                     alert(JSON.stringify(err));
                 }
             });
-            // dd.util.domainStorage.getItem({
-            //     name: 'basic', // 存储信息的key值
-            //     onSuccess: function(info) {
-            //         me.basic = info.value.basic
+            dd.util.domainStorage.getItem({
+                name: 'param',
+                onSuccess: function(info) {
 
+                    me.param = info.value
 
-            //     },
-            //     onFail: function(err) {
-            //         alert(JSON.stringify(err));
-            //     }
-            // });
-            // dd.util.domainStorage.getItem({
-            //     name: 'param', // 存储信息的key值
-            //     onSuccess: function(info) {
-
-            //         me.param = info.value.param
-
-            //     },
-            //     onFail: function(err) {
-            //         alert(JSON.stringify(err));
-            //     }
-            // });
-
+                },
+                onFail: function(err) {
+                    alert(JSON.stringify(err));
+                }
+            });
 
         });
     },
     methods: {
         getClick: function() {
             this.$router.push('config');
+        },
+        pickTime() {
+            picker.pick({
+                items:this.keys
+            }, event => {
+                if (event.result === 'success') {
+                    this.key = this.keys[event.data]
+                }
+            })
         }
     }
 }
@@ -123,4 +137,16 @@ export default {
     width: 750px;
     height: 750px;
 }
+.button {
+    font-size: 36px;
+    width: 280px;
+    color: #41B883;
+    text-align: center;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgb(162, 217, 192);
+    background-color: rgba(162, 217, 192, 0.2);
+  }
 </style>
