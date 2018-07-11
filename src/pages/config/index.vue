@@ -11,7 +11,7 @@
             </div>
             <div class='block'>
                 <text class="title">keys</text>
-                <textarea class="textarea" @input="keyschange" @change="keyschange" @focus="keyschange" @blur="onblur" v-model='keys'></textarea>
+                <textarea class="textarea big" @input="keyschange" @change="keyschange" @focus="keyschange" @blur="onblur" v-model='keys'></textarea>
             </div>
 
 
@@ -47,6 +47,40 @@ export default {
             dingtalk.on('goBack', function() {
                 me.$router.back()
             })
+
+            dd.util.domainStorage.getItem({
+                name: 'keys', // 存储信息的key值
+                onSuccess: function(info) {
+                    
+                    me.keys = info.value
+                    
+                },
+                onFail: function(err) {
+                    alert(JSON.stringify(err));
+                }
+            });
+            dd.util.domainStorage.getItem({
+                name: 'basic', // 存储信息的key值
+                onSuccess: function(info) {
+
+                    me.basic = info.value
+
+                },
+                onFail: function(err) {
+                    alert(JSON.stringify(err));
+                }
+            });
+            dd.util.domainStorage.getItem({
+                name: 'param',
+                onSuccess: function(info) {
+
+                    me.param = info.value
+
+                },
+                onFail: function(err) {
+                    alert(JSON.stringify(err));
+                }
+            });
 
         });
     },
@@ -137,5 +171,8 @@ export default {
     margin-right: 20;
     border-color: rgb(162, 217, 192);
     background-color: rgba(162, 217, 192, 0.2);
+}
+.big{
+    height:600px;
 }
 </style>

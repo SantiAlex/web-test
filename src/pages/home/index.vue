@@ -44,9 +44,11 @@ export default {
 
 
             dd.util.domainStorage.getItem({
-                name: 'keys', // 存储信息的key值
+                name: 'keys', 
                 onSuccess: function(info) {
-                    
+                    modal.alert({
+                        message:info.value
+                    })
                     me.keys = JSON.parse(info.value)
                     
                 },
@@ -55,7 +57,7 @@ export default {
                 }
             });
             dd.util.domainStorage.getItem({
-                name: 'basic', // 存储信息的key值
+                name: 'basic', 
                 onSuccess: function(info) {
 
                     me.basic = info.value
